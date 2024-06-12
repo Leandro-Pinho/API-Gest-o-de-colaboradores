@@ -1,6 +1,7 @@
 import Router from "express";
 import {
   create,
+  erase,
   findAll,
   findById,
   update,
@@ -12,5 +13,6 @@ route.get("/", findAll);
 route.get("/:id", findById);
 route.post("/", create);
 route.patch("/:id", update);
+route.delete("/:id", erase);
 
 export default route;

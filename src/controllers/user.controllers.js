@@ -46,7 +46,6 @@ export const create = async (req, res) => {
 export const findById = async (req, res) => {
   try {
     const id = req.params.id;
-    // ou const id = req.id - pegando do middleware
 
     // para verificar se o id é valido
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -54,11 +53,10 @@ export const findById = async (req, res) => {
     }
 
     const user = await User.findById(id);
-    // ou const user = req.user - pegando do middleware
 
-    // if (!user) {
-    //     return res.status(400).json({ message: "Usuario não encontrado!" })
-    // }
+    if (!user) {
+      return res.status(400).json({ message: "Usuario não encontrado!" });
+    }
 
     res.json(user);
   } catch (error) {
@@ -84,7 +82,7 @@ export const update = async (req, res) => {
     }
 
     const user = await User.findById(id);
-    
+
     if (!user) {
       return res.status(400).json({ message: "Usuario não encontrado!" });
     }
@@ -102,6 +100,24 @@ export const update = async (req, res) => {
       message: "Usuario cadastrado atualizado com sucesso!",
       user: userAtualizado,
     });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
+export const erase = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(400).json({ message: "Usuario não encontrado!" });
+    }
+
+    await User.deleteOne({_id: id});
+
+    return res.json({ message: "User deleted successfully!" });
   } catch (error) {
     res.status(500).json({ message: error });
   }
